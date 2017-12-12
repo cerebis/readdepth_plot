@@ -53,9 +53,9 @@ def get_block_medians(glob_path, step_size):
 
     # manually parse each organism directory. Manually meaning, change this path
     # for each one. Could be made a loop, but unnecessary for 3 runs
-    for fn in glob.glob('{}/*_coverage.txt'.format(glob_path)):
+    for n, fn in enumerate(glob.glob('{}/*_coverage.txt'.format(glob_path))):
 
-        print '\t found {}...'.format(fn)
+        print '\t {} found {}...'.format(n+1, fn)
 
         # read the data file
         smpl = fn.split('/')[-1][:-len('_coverage.txt')]
@@ -67,10 +67,27 @@ def get_block_medians(glob_path, step_size):
         meds.append(m)
         bins.append(b)
 
+    max_bins = 0
+    for bi in bins:
+        if max(bi) > max_bins:
+            max_bins = max(bi)
+    
+    for i in xrange(len(bins)):
+        if max(bins[i]) < max_bins:
+            print 'Warning, data file {} had fewer bins that the largest. Extra empty bins added'.format(i+1)
+            bi = bins[i].tolist()
+            mi = meds[i].tolist()
+            while max(bi) < max_bins:
+                bi.append(bi[-1] + step_size)
+                mi.append(0)
+            bins[i] = np.array(bi)
+            meds[i] = np.array(mi)
+        
+
     return pd.DataFrame(np.vstack(meds).T, columns=smpl_names), bins
 
 
-def run_hclust(outname, meds, bins, step_size, tick_spc, olo=True, savePlot=False):
+def run_hclust(outname, meds, bins, step_size, tick_spc, use_polo=True, save_plot=False):
     """
     Cluster and plot the binned data matrix. This calls optimal leaf ordering
     algorithm (polo) by default, which has significant time-complexity.
@@ -102,7 +119,7 @@ def run_hclust(outname, meds, bins, step_size, tick_spc, olo=True, savePlot=Fals
     Y = linkage(D, method=method, metric=metric)
 
     # additionally, find optimal leaf ordering
-    if olo:
+    if use_polo:
         import polo
         print('\tcalculating optimal leaf ordering...')
         Y = polo.optimal_leaf_ordering(Y, pdist(D, metric=metric))
@@ -156,7 +173,7 @@ def run_hclust(outname, meds, bins, step_size, tick_spc, olo=True, savePlot=Fals
     # Plot colorbar.
     fig.colorbar(im, cax=axcolor, orientation='horizontal')
 
-    if savePlot:
+    if save_plot:
         plt.savefig('{}_hclust.pdf'.format(outname), bbox_inches='tight')
         pd.DataFrame(D.T, columns=names).to_csv('{}_dat.csv'.format(outname))
     else:
@@ -169,7 +186,7 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--use_olo', action='store_true', default=False, help='Enable optimal leaf ordering')
+    parser.add_argument('--use-polo', action='store_true', default=False, help='Enable optimal leaf ordering')
     parser.add_argument('-b', '--bin-size', default=5000, type=int, help='Bin size in BP [5000]')
     parser.add_argument('-t', '--tick-spacing', default=100, type=int, help='Tick spacing in bins [100]')
     parser.add_argument('input_dir', help='Input directory containing coverage files')
@@ -180,4 +197,5 @@ if __name__ == '__main__':
     meds, bins = get_block_medians(args.input_dir, step_size=args.bin_size)
 
     print 'Clustering and plotting...'
-    run_hclust(args.output_file, meds, bins[0], args.bin_size, args.tick_spacing, savePlot=True, olo=args.use_olo)
+    run_hclust(args.output_file, meds, bins[0], args.bin_size, args.tick_spacing, save_plot=True, use_polo=args.use_polo)
+
