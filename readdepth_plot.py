@@ -22,7 +22,9 @@ def binning(data, step):
     bins = []
     for ir in xrange(data.shape[0]):
         if data[ir, 0] > (n+1)*step:
-            meds.append(np.median(c))
+            if len(c) > 0:
+                meds.append(np.median(c))
+            meds.append(0)
             bins.append((n+1)*step)
             n += 1
             c = []
