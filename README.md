@@ -2,7 +2,7 @@
 
 ## Requires
 - python 2.7
-- Polo must be installed from git: pip install git+git://github.com/adrianveres/polo
+- Polo must be installed from git: `pip install git+git://github.com/adrianveres/polo`
 
 A standalone script which reads in 3-column output from (e.g. `samtools depth test.bam > test_coverage.txt`) and creates a heatmap plot representing depth as a function of base poition.
 
