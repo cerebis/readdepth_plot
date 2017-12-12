@@ -1,12 +1,16 @@
-from matplotlib import gridspec
 from scipy.spatial.distance import pdist
 from scipy.cluster.hierarchy import linkage, dendrogram
 
-import matplotlib.colors as colors
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import glob
+
+import matplotlib
+matplotlib.use('Agg')   #avoid problems with headless environments
+
+import matplotlib.pyplot as plt
+import matplotlib.colors as colors
+from matplotlib import gridspec
 
 
 def binning(data, step):
@@ -104,7 +108,7 @@ def run_hclust(outname, meds, bins, step_size, tick_spc, olo=True, savePlot=Fals
         Y = polo.optimal_leaf_ordering(Y, pdist(D, metric=metric))
 
     # now we do some plotting
-    fig = plt.figure(figsize=(12, 8), dpi=150)
+    fig = plt.figure(figsize=(12, 0.25*len(meds.columns)), dpi=150)
     gs = gridspec.GridSpec(2, 2, width_ratios=[5, 2], height_ratios= [0.6,10])
     gs.update(wspace=0.08)
 
