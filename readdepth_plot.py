@@ -24,7 +24,8 @@ def binning(data, step):
         if data[ir, 0] > (n+1)*step:
             if len(c) > 0:
                 meds.append(np.median(c))
-            meds.append(0)
+            else:
+                meds.append(0)
             bins.append((n+1)*step)
             n += 1
             c = []
