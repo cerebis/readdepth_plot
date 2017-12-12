@@ -1,4 +1,4 @@
-#ReadDepth Plot
+# ReadDepth Plot
 
 A standalone script which reads in 3-column output from `samtools depth` and creates a heatmap plot representing depth as a function of base poition.
 
