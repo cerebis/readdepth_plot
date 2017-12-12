@@ -6,7 +6,6 @@ import matplotlib.colors as colors
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import polo
 import glob
 
 
@@ -97,6 +96,7 @@ def run_hclust(outname, meds, bins, step_size, tick_spc, olo=True, savePlot=Fals
 
     # additionally, find optimal leaf ordering
     if olo:
+        import polo
         print('\tcalculating optimal leaf ordering...')
         Y = polo.optimal_leaf_ordering(Y, pdist(D, metric=metric))
 
