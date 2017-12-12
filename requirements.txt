@@ -3,5 +3,4 @@ scipy
 numpy
 pandas
 polo
-pylab
 glob

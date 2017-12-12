@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import polo
-import pylab
 import glob
 
 
@@ -128,7 +127,7 @@ def run_hclust(outname, meds, bins, step_size, tick_spc, olo=True, savePlot=Fals
     vmax = -vmin
 
     # plot the matrix, 5% extra bounds above and below on colour range
-    im = axmatrix.matshow(D, aspect='auto', origin='lower', cmap=pylab.cm.RdBu_r,
+    im = axmatrix.matshow(D, aspect='auto', origin='lower', cmap='RdBu_r',
                           norm=colors.Normalize(vmin=vmin, vmax=vmax))
 
     axmatrix.set_xticks([])
@@ -148,7 +147,7 @@ def run_hclust(outname, meds, bins, step_size, tick_spc, olo=True, savePlot=Fals
     axmatrix.xaxis.tick_bottom()
 
     # Plot colorbar.
-    pylab.colorbar(im, cax=axcolor, orientation='horizontal')
+    fig.colorbar(im, cax=axcolor, orientation='horizontal')
 
     if savePlot:
         plt.savefig('{}_hclust.pdf'.format(outname), bbox_inches='tight')
