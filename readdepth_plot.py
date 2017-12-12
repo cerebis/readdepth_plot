@@ -162,6 +162,7 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser()
+    parser.add_argument('--use_olo', action='store_true', default=False, help='Enable optimal leaf ordering')
     parser.add_argument('-b', '--bin-size', default=5000, type=int, help='Bin size in BP [5000]')
     parser.add_argument('-t', '--tick-spacing', default=100, type=int, help='Tick spacing in bins [100]')
     parser.add_argument('input_dir', help='Input directory containing coverage files')
@@ -172,4 +173,4 @@ if __name__ == '__main__':
     meds, bins = get_block_medians(args.input_dir, step_size=args.bin_size)
 
     print 'Clustering and plotting...'
-    run_hclust(args.output_file, meds, bins[0], args.bin_size, args.tick_spacing, savePlot=True)
+    run_hclust(args.output_file, meds, bins[0], args.bin_size, args.tick_spacing, savePlot=True, olo=args.use_olo)
